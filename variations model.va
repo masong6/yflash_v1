@@ -59,8 +59,8 @@ analog begin
 //Includes programming(for 4.5V, 5V), erase(for 8V) and read for 2V
 //Read mode -- subthreshold mode conduction
 		if(V(dra,src_read)<= 2.0)begin
-			v_var = V(D,S_INJ) + $rdist_normal (v_var_seed, 0, v_var_std); //random noise on reading voltage
-			iread = (i0 + $rdist_normal(process_var_seed, 0, process_var_std))*(mvt/mvt0)^2.0;
+			v_var = V(dra,src_read) + $rdist_normal (v_var_seed, 0, v_var_std); //random noise on reading voltage
+			iread = (i0 + $rdist_normal(process_var_seed, 0, process_var_std))*((mvt*mvt)/(mvt0*mvt0));
 			i = iread*exp((v_var)/(mvt))*exp(-vth/mvt);
 			dvthdt = 0;
 			I(dra) <+ i;
@@ -71,7 +71,7 @@ analog begin
 		
 //Programming mode 4.5V short-channel
 		if (V(dra,src_inj)== 4.5) begin
-			v_var = V(D,S_INJ) + $rdist_normal (v_var_seed, 0, v_var_std); //random noise on programming voltage  
+			v_var = V(dra,src_inj) + $rdist_normal (v_var_seed, 0, v_var_std); //random noise on programming voltage  
 			prob_seed = prob_seed_in;
 			randm = $rdist_uniform(1, 0, 1);
 			if (prob_t/5 >= randm) begin
@@ -82,7 +82,7 @@ analog begin
 		end
 //Programming mode 5V short-channel
 		if (V(dra,src_inj) >= 4.9 && V(dra,src_inj) <= 5.1) begin
-			v_var = V(D,S_INJ) + $rdist_normal (v_var_seed, 0, v_var_std); //random noise on programming voltage
+			v_var = V(dra,src_inj) + $rdist_normal (v_var_seed, 0, v_var_std); //random noise on programming voltage
 			prob_seed = prob_seed_in;			
 			randm = $rdist_uniform(10, 0, 1);
 			if (prob_t/5 >= randm) begin
@@ -93,7 +93,7 @@ analog begin
 		end
 //Erase mode 8V
 		if (V(src_inj,gnd) == 8) begin
-			v_var = V(S_INJ,gnd) + $rdist_normal (v_var_seed, 0, v_var_std); //random noise on erasing voltage
+			v_var = V(src_inj,gnd) + $rdist_normal (v_var_seed, 0, v_var_std); //random noise on erasing voltage
 			prob_seed = prob_seed_in;
 			randm = $rdist_uniform(1, 0, 1);
  			if (prob_t/5 >= randm) begin
